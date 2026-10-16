@@ -38,8 +38,10 @@ def test_baseline_sorted_by_distance():
     results = get("matcher").baseline(q, ctx.store.resources)
     dists = [r.distance_km for r in results]
     assert dists == sorted(dists)
-    # baseline score IS the distance (lower = closer)
-    assert all(r.score == r.distance_km for r in results)
+    # higher-is-better score, monotone decreasing in distance (same as rank)
+    assert all(r.score == 1 / (1 + r.distance_km) for r in results)
+    scores = [r.score for r in results]
+    assert scores == sorted(scores, reverse=True)
 
 
 def test_nearest_resource_wins_baseline():

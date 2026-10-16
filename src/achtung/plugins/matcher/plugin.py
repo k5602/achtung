@@ -6,8 +6,6 @@ from achtung.core.context import PluginContext
 from achtung.core.geo import haversine_km
 from achtung.core.models import RankedResult, Resource, UserQuery
 
-# TODO(P4): set weights W_DIST=0.4, W_TRUST=0.3, W_CAP=0.2, W_FRESH=0.1. (Done) .
-
 
 class Matcher(MatcherPlugin):
     name = "matcher"
@@ -19,7 +17,6 @@ class Matcher(MatcherPlugin):
 
     def setup(self, ctx: PluginContext) -> None:
         """Stateless."""
-        # TODO(P4): implement(Done No need to Setup).
         return
 
     def run(self, ctx: PluginContext) -> list[RankedResult]:
@@ -55,19 +52,24 @@ class Matcher(MatcherPlugin):
         return results
 
     def baseline(self, query: UserQuery, resources: list[Resource]) -> list[RankedResult]:
-        """Pure distance sort. Baseline for evaluator."""
+        """Pure distance sort. Baseline for evaluator.
+
+        Uses score = 1/(1+dist) To match rank() (higher is better).
+        """
         if query.need != "all":
             resources = [r for r in resources if r.kind == query.need]
-        results = [
-            RankedResult(
-                resource=r,
-                score=haversine_km(query.lat, query.lon, r.lat, r.lon),
-                distance_km=haversine_km(query.lat, query.lon, r.lat, r.lon),
-                verified=r.verified,
+        results = []
+        for r in resources:
+            dist = haversine_km(query.lat, query.lon, r.lat, r.lon)
+            results.append(
+                RankedResult(
+                    resource=r,
+                    score=1.0 / (1.0 + dist),
+                    distance_km=dist,
+                    verified=r.verified,
+                )
             )
-            for r in resources
-        ]
-        results.sort(key=lambda x: x.distance_km)
+        results.sort(key=lambda x: x.score, reverse=True)
         return results
 
     @staticmethod
