@@ -12,7 +12,6 @@ from achtung.core.context import PluginContext
 from achtung.core.models import DisasterReport, UserQuery
 
 SYN = Path(__file__).parent.parent.parent / "data" / "synonyms_ar_en.json"
-# Primodial Art
 TOKEN = re.compile(r"[\w\u0600-\u06FF]+")
 
 
@@ -21,6 +20,9 @@ class Retrieval(RetrievalPlugin):
 
     def __init__(self) -> None:
         self.syn: dict[str, str] = {}
+        self._key: tuple[str, ...] | None = None
+        self._toks: list[list[str]] = []
+        self._df: Counter[str] = Counter()
 
     def setup(self, ctx: PluginContext) -> None:
         """Load AR-EN map. Index built lazily per search."""
@@ -40,6 +42,15 @@ class Retrieval(RetrievalPlugin):
                 t = t.replace(k, v)
         return [self.syn.get(w, w) for w in TOKEN.findall(t)]
 
+    def _index(self, docs: list[DisasterReport]) -> None:
+        """Rebuild toks + df only when store changes."""
+        key = tuple(r.id for r in docs)
+        if key == self._key:
+            return
+        self._toks = [self.normalize(f"{r.text} {r.kind} {r.source}") for r in docs]
+        self._df = Counter(t for dt in self._toks for t in set(dt))
+        self._key = key
+
     def search(self, ctx: PluginContext, query: UserQuery) -> list[DisasterReport]:
         """TF-IDF + need boost + trust tiebreak."""
         docs = list(ctx.store.reports)
@@ -50,8 +61,8 @@ class Retrieval(RetrievalPlugin):
             qt += self.normalize(query.need)
         if not qt:
             return sorted(docs, key=lambda r: -r.trust)
-        toks = [self.normalize(f"{r.text} {r.kind} {r.source}") for r in docs]
-        df = Counter(t for dt in toks for t in set(dt))
+        self._index(docs)
+        toks, df = self._toks, self._df
         idf = {t: math.log((len(docs) + 1) / (df[t] + 1)) + 1 for t in set(qt)}
         out: list[tuple[float, float, DisasterReport]] = []
         for r, dt in zip(docs, toks, strict=True):
