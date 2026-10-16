@@ -1,3 +1,4 @@
+#cspell:disable
 """P5 router: safe routing. Owner: P5.
 
 Shortest path on data/kfs_graph.json (road nodes + km edges).
