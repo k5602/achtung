@@ -1,0 +1,271 @@
+{
+  "_note": "KFS fixture. hours_ago -> absolute on load. First 3 resources pin demo distances from KFS Uni (31.0968,30.9516).",
+  "reports": [
+    {
+      "id": "rep-crescent-01",
+      "source": "Egyptian Red Crescent - Kafr El-Sheikh branch",
+      "text": "Food aid distribution at KFS city center, flour and canned goods, bring ID",
+      "kind": "food_aid",
+      "lat": 31.104,
+      "lon": 30.9516,
+      "hours_ago": 2,
+      "trust": 0.9,
+      "verified": true
+    },
+    {
+      "id": "rep-gov-01",
+      "source": "Kafr El-Sheikh Governorate",
+      "text": "Relief centers available in Kafr El-Sheikh city and Desouk, shelter and blankets",
+      "kind": "relief_center",
+      "lat": 31.1076,
+      "lon": 30.9516,
+      "hours_ago": 3,
+      "trust": 0.9,
+      "verified": true
+    },
+    {
+      "id": "rep-un-01",
+      "source": "United Nations - WFP",
+      "text": "Aid beneficiary lists published for Kafr El-Sheikh storm response, registration at governorate office",
+      "kind": "beneficiary_list",
+      "lat": 31.11,
+      "lon": 30.9444,
+      "hours_ago": 5,
+      "trust": 0.95,
+      "verified": true
+    },
+    {
+      "id": "rep-crescent-02",
+      "source": "Egyptian Red Crescent - Kafr El-Sheikh branch",
+      "text": "Mobile clinic open at KFS stadium, first aid and chronic medication",
+      "kind": "medical",
+      "lat": 31.1103,
+      "lon": 30.9516,
+      "hours_ago": 4,
+      "trust": 0.85,
+      "verified": true
+    },
+    {
+      "id": "rep-gov-02",
+      "source": "Kafr El-Sheikh Governorate",
+      "text": "Water tanks deployed at Sidi Salem and Motobas, distribution at noon",
+      "kind": "water",
+      "lat": 31.27,
+      "lon": 30.36,
+      "hours_ago": 6,
+      "trust": 0.9,
+      "verified": true
+    },
+    {
+      "id": "rep-un-02",
+      "source": "United Nations - UNHCR",
+      "text": "Emergency shelter kits for Baltim coastal families, pickup at Hamoul center",
+      "kind": "shelter",
+      "lat": 31.3,
+      "lon": 31.14,
+      "hours_ago": 8,
+      "trust": 0.95,
+      "verified": true
+    },
+    {
+      "id": "rep-ngo-01",
+      "source": "Resala NGO - Kafr El-Sheikh",
+      "text": "Hot meals at Desouk mosque courtyard, volunteers needed",
+      "kind": "food_aid",
+      "lat": 31.13,
+      "lon": 30.65,
+      "hours_ago": 7,
+      "trust": 0.75,
+      "verified": true
+    },
+    {
+      "id": "rep-news-01",
+      "source": "Al-Ahram news",
+      "text": "Storm warning for Kafr El-Sheikh coast, Burullus lake overflow risk",
+      "kind": "warning",
+      "lat": 31.55,
+      "lon": 31.09,
+      "hours_ago": 10,
+      "trust": 0.6,
+      "verified": true
+    },
+    {
+      "id": "rep-gov-03",
+      "source": "Kafr El-Sheikh Governorate",
+      "text": "Safe route list: KFS-Desouk road open, Baltim road partial closure",
+      "kind": "road_alert",
+      "lat": 31.1117,
+      "lon": 30.9444,
+      "hours_ago": 1.5,
+      "trust": 0.9,
+      "verified": true
+    },
+    {
+      "id": "rep-crescent-03",
+      "source": "Egyptian Red Crescent - Desouk branch",
+      "text": "Blanket drive at Foh youth center, families prioritized",
+      "kind": "relief_center",
+      "lat": 31.2,
+      "lon": 30.44,
+      "hours_ago": 9,
+      "trust": 0.85,
+      "verified": true
+    },
+    {
+      "id": "rep-social-01",
+      "source": "Facebook post",
+      "text": "Water truck at Desouk square right now, free water!!!",
+      "kind": "water",
+      "lat": 31.13,
+      "lon": 30.65,
+      "hours_ago": 1,
+      "trust": 0.3,
+      "verified": false
+    },
+    {
+      "id": "rep-social-02",
+      "source": "WhatsApp forward",
+      "text": "Bridge near Baltim collapsed, do not cross!!!",
+      "kind": "road_alert",
+      "lat": 31.55,
+      "lon": 31.09,
+      "hours_ago": 0.5,
+      "trust": 0.2,
+      "verified": false
+    },
+    {
+      "id": "rep-social-03",
+      "source": "TikTok video",
+      "text": "Free fuel at Qallin station, share quickly",
+      "kind": "fuel",
+      "lat": 30.99,
+      "lon": 30.85,
+      "hours_ago": 0.8,
+      "trust": 0.25,
+      "verified": false
+    },
+    {
+      "id": "rep-social-04",
+      "source": "Facebook post",
+      "text": "Shelter full at KFS university, go to private hall (paid)",
+      "kind": "shelter",
+      "lat": 31.0968,
+      "lon": 30.9516,
+      "hours_ago": 2.5,
+      "trust": 0.3,
+      "verified": false
+    }
+  ],
+  "resources": [
+    {
+      "id": "res-food-01",
+      "kind": "food",
+      "name": "Red Crescent food point - KFS center",
+      "lat": 31.104,
+      "lon": 30.9516,
+      "capacity": 300,
+      "source": "Egyptian Red Crescent - Kafr El-Sheikh branch",
+      "trust": 0.9,
+      "verified": true
+    },
+    {
+      "id": "res-shelter-01",
+      "kind": "shelter",
+      "name": "Governorate shelter - KFS north",
+      "lat": 31.1076,
+      "lon": 30.9516,
+      "capacity": 150,
+      "source": "Kafr El-Sheikh Governorate",
+      "trust": 0.9,
+      "verified": true
+    },
+    {
+      "id": "res-medical-01",
+      "kind": "medical",
+      "name": "Mobile clinic - KFS north",
+      "lat": 31.1103,
+      "lon": 30.9516,
+      "capacity": 40,
+      "source": "Egyptian Red Crescent - Kafr El-Sheikh branch",
+      "trust": 0.85,
+      "verified": true
+    },
+    {
+      "id": "res-food-02",
+      "kind": "food",
+      "name": "Resala hot meals - Desouk mosque",
+      "lat": 31.13,
+      "lon": 30.65,
+      "capacity": 200,
+      "source": "Resala NGO - Kafr El-Sheikh",
+      "trust": 0.75,
+      "verified": true
+    },
+    {
+      "id": "res-shelter-02",
+      "kind": "shelter",
+      "name": "UN shelter kits - Hamoul center",
+      "lat": 31.3,
+      "lon": 31.14,
+      "capacity": 120,
+      "source": "United Nations - UNHCR",
+      "trust": 0.95,
+      "verified": true
+    },
+    {
+      "id": "res-shelter-03",
+      "kind": "shelter",
+      "name": "Youth center hall - Foh",
+      "lat": 31.2,
+      "lon": 30.44,
+      "capacity": 80,
+      "source": "Egyptian Red Crescent - Desouk branch",
+      "trust": 0.85,
+      "verified": true
+    },
+    {
+      "id": "res-medical-02",
+      "kind": "medical",
+      "name": "Desouk general hospital - emergency",
+      "lat": 31.1288,
+      "lon": 30.6433,
+      "capacity": 60,
+      "source": "Kafr El-Sheikh Governorate",
+      "trust": 0.9,
+      "verified": true
+    },
+    {
+      "id": "res-water-01",
+      "kind": "water",
+      "name": "Gov water tanks - Sidi Salem",
+      "lat": 31.27,
+      "lon": 30.36,
+      "capacity": 500,
+      "source": "Kafr El-Sheikh Governorate",
+      "trust": 0.9,
+      "verified": true
+    },
+    {
+      "id": "res-water-02",
+      "kind": "water",
+      "name": "Gov water tanks - Motobas",
+      "lat": 31.28,
+      "lon": 30.52,
+      "capacity": 400,
+      "source": "Kafr El-Sheikh Governorate",
+      "trust": 0.9,
+      "verified": true
+    },
+    {
+      "id": "res-water-03",
+      "kind": "water",
+      "name": "Water truck - Desouk (unverified)",
+      "lat": 31.13,
+      "lon": 30.65,
+      "capacity": 50,
+      "source": "Facebook post",
+      "trust": 0.3,
+      "verified": false
+    }
+  ]
+}

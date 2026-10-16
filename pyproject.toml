@@ -1,0 +1,35 @@
+[project]
+name = "achtung"
+version = "0.1.0"
+description = "Achtung (SafeReach): real-time disaster info and relief matching (KFS prototype)"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "requests>=2.31",
+]
+authors = [
+    { name = "SafeReach Team" },
+]
+
+[project.scripts]
+achtung = "achtung.main:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "ruff>=0.8",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv]
+package = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

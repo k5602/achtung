@@ -1,0 +1,20 @@
+{
+  "_note": "Baseline AR-EN normalization.",
+  "اكل": "food",
+  "طعام": "food",
+  "غذاء": "food",
+  "مياه": "water",
+  "ماء": "water",
+  "ملجأ": "shelter",
+  "مأوى": "shelter",
+  "دواء": "medical",
+  "علاج": "medical",
+  "عيادة": "medical",
+  "مستشفى": "medical",
+  "مساعدة": "aid",
+  "إغاثة": "relief",
+  "اغاثة": "relief",
+  "كفر الشيخ": "kafr el-sheikh",
+  "دسوق": "desouk",
+  "بلطيم": "baltim"
+}
