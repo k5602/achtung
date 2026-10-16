@@ -5,16 +5,21 @@ from achtung.core.base import MatcherPlugin
 from achtung.core.context import PluginContext
 from achtung.core.models import RankedResult, Resource, UserQuery
 
-# TODO(P4): set weights W_DIST=0.4, W_TRUST=0.3, W_CAP=0.2, W_FRESH=0.1.
+# TODO(P4): set weights W_DIST=0.4, W_TRUST=0.3, W_CAP=0.2, W_FRESH=0.1. (Done) .
 
 
 class Matcher(MatcherPlugin):
     name = "matcher"
+    
+    W_DIST=0.4,
+    W_TRUST=0.3,
+    W_CAP=0.2,
+    W_FRESH=0.1
 
     def setup(self, ctx: PluginContext) -> None:
         """Stateless."""
         # TODO(P4): implement.
-        raise NotImplementedError
+        return
 
     def run(self, ctx: PluginContext) -> list[RankedResult]:
         """Rank store resources for query in config."""
