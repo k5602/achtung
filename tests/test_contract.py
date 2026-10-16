@@ -42,6 +42,9 @@ def test_interface_shape():
 def test_stubs_raise():
     ctx = build_ctx()
     for p in PLUGINS:
+        if p.name == "retrieval":  # implemented, must not raise
+            assert isinstance(p.run(ctx), list)
+            continue
         try:
             p.run(ctx)
         except NotImplementedError:
