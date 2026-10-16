@@ -19,7 +19,7 @@ class Matcher(MatcherPlugin):
 
     def setup(self, ctx: PluginContext) -> None:
         """Stateless."""
-        # TODO(P4): implement(Done).
+        # TODO(P4): implement(Done No need to Setup).
         return
 
     def run(self, ctx: PluginContext) -> list[RankedResult]:
@@ -56,8 +56,19 @@ class Matcher(MatcherPlugin):
 
     def baseline(self, query: UserQuery, resources: list[Resource]) -> list[RankedResult]:
         """Pure distance sort. Baseline for evaluator."""
-        # TODO(P4): implement.
-        raise NotImplementedError
+        if query.need != "all":
+            resources = [r for r in resources if r.kind == query.need]
+        results = [
+            RankedResult(
+                resource=r,
+                score=haversine_km(query.lat, query.lon, r.lat, r.lon),
+                distance_km=haversine_km(query.lat, query.lon, r.lat, r.lon),
+                verified=r.verified,
+            )
+            for r in resources
+        ]
+        results.sort(key=lambda x: x.distance_km)
+        return results
 
     @staticmethod
     def _freshness(ctx: PluginContext, resource: Resource) -> float:
