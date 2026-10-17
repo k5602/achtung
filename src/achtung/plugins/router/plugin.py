@@ -1,22 +1,11 @@
 # cspell:disable
-import math
 from achtung.core.base import RouterPlugin
 from achtung.core.context import PluginContext
+from achtung.core.geo import haversine_km
 from achtung.core.models import RoutePath
+
 from .algorithms import astar, dijkstra
 from .graph_loader import load_graph
-
-
-def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-    r = 6371.0
-    dlat, dlon = math.radians(lat2 - lat1), math.radians(lon2 - lon1)
-    a = (
-        math.sin(dlat / 2) ** 2
-        + math.cos(math.radians(lat1))
-        * math.cos(math.radians(lat2))
-        * math.sin(dlon / 2) ** 2
-    )
-    return r * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 
 class Router(RouterPlugin):
@@ -53,6 +42,9 @@ class Router(RouterPlugin):
         end: tuple[float, float] | str,
         algo: str = "astar",
     ) -> RoutePath:
+        if algo not in ("dijkstra", "astar"):
+            raise ValueError(f"unknown algo {algo!r}; expected 'dijkstra' or 'astar'")
+
         start_node = self._nearest_node(start)
         end_node = self._nearest_node(end)
 
@@ -63,14 +55,18 @@ class Router(RouterPlugin):
                 self.adj, start_node, end_node, self.coords
             )
 
+        if not path:
+            raise ValueError(f"no route from {start_node!r} to {end_node!r}")
+
         return RoutePath(
             nodes=tuple(path),
-            distance_km=float(dist if dist != float("inf") else 0.0),
+            distance_km=float(dist),
             algo=algo,
             expanded=expanded,
         )
 
     def run(self, ctx: PluginContext) -> RoutePath:
+        """(TODO(P5): use the matcher's top result)."""
         query = ctx.config.get("query")
         if query and hasattr(query, "lat") and hasattr(query, "lon"):
             start_pos = (query.lat, query.lon)
