@@ -14,7 +14,7 @@ from achtung.core.registry import PLUGINS
 from achtung.main import build_ctx
 
 EXPECTED = {"collector", "retrieval", "verifier", "matcher", "router"}
-IMPLEMENTED = {"retrieval"}  # plugins with real run(), add names here as they land
+IMPLEMENTED = {"retrieval", "matcher"}  # plugins with real run(), add names here as they land
 BASES = {
     "collector": CollectorPlugin,
     "retrieval": RetrievalPlugin,
