@@ -1,7 +1,8 @@
-"""Achtung demo: KFS query skeleton (plugins are stubs for now)."""
+"""Achtung: KFS query."""
 from __future__ import annotations
 
 import argparse
+import sys
 
 import achtung.plugins  # noqa: F401  (registers all)
 from achtung.core.context import PluginContext
@@ -27,16 +28,20 @@ def build_ctx(need: str = "all", text: str = "اكل في كفر الشيخ") ->
             ctx.log(f"[{name}] TODO: setup not implemented")
     return ctx
 
-# TODO(P1-P5): add a render() to show trusted/unverified/resources/route once plugins land.
 # TODO add a --offline flag to avoid network calls (for demo purposes, we can use a local store with canned data).
 # TODO add a --debug flag to show more verbose logs (for demo purposes, we can use a local store with canned data).
-# TODO add a COOL TUI to show the query and the results
 def main() -> None:
-    """Try pipeline, report TODO status per plugin."""
+    """Open the TUI on a terminal; --cli (or a pipe) prints the plain demo."""
     ap = argparse.ArgumentParser(description="Achtung SafeReach demo (KFS)")
     ap.add_argument("--need", default="all", help="food|shelter|medical|water|all")
     ap.add_argument("--text", default="اكل في كفر الشيخ", help="query text")
+    ap.add_argument("--cli", action="store_true", help="plain output instead of the TUI")
     args = ap.parse_args()
+    if not args.cli and sys.stdout.isatty():
+        from achtung.tui import AchtungApp
+
+        AchtungApp(build_ctx(args.need, args.text)).run()
+        return
     ctx = build_ctx(args.need, args.text)
     q: UserQuery = ctx.config["query"]
     print(f'Query: "{q.text}"  (user: KFS University, {KFS_LAT}, {KFS_LON})\n')
@@ -46,8 +51,6 @@ def main() -> None:
             print(f"[{name}] ok")
         except NotImplementedError:
             print(f"[{name}] TODO(owner): not implemented")
-    # TODO(P1-P5): render trusted/unverified/resources/route once plugins land.
-
 
 if __name__ == "__main__":
     main()
