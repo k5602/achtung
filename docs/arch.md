@@ -10,7 +10,7 @@ Bad posts (rumors) are never deleted. They are only marked as unverified.
 
 ## Parts
 
-There are two parts: `core` and `plugins`.
+There are two layers: `core` and `plugins`, with `tui.py` on top.
 
 - `core` = shared rules. Nobody changes this please.
   It holds the data shapes (`models.py`), the plugin rules (`base.py`),
@@ -37,7 +37,7 @@ There are two parts: `core` and `plugins`.
 4. Verifier (P3) splits posts into confirmed and unverified.
 5. Matcher (P4) picks the best aid points from `ctx.store.resources`.
 6. Router (P5) finds the shortest safe road to the best aid point.
-7. Screen shows: trusted news, warnings about rumors, nearest aid, road.
+7. Screen shows: trusted news, warnings about rumors, nearest aid, road (see Screen below).
 
 Data only flows one way: collector -> retrieval -> verifier ->
 matcher -> router. This is why 5 people can work at the same time.
@@ -48,8 +48,10 @@ matcher -> router. This is why 5 people can work at the same time.
 
 Job: bring posts into the store.
 In: settings in `ctx.config`. Out: list of `DisasterReport` in the store.
-Reads `data/kfs_mock.json` when offline and we can ignore the online part for now.
-To finish: call ReliefWeb and GDACS, then fill the store the same way.
+Live feed: NASA EONET. If `ctx.config['offline']` is true, or the request
+fails, it reads `data/kfs_mock.json` instead, so the demo always has data.
+Resources always come from the mock file.
+To finish: add ReliefWeb and GDACS as extra sources.
 
 Learn: ReliefWeb API docs (https://apidoc.reliefweb.int),
 GDACS homepage (https://www.gdacs.org),
@@ -106,12 +108,13 @@ Dijkstra vs A* (km + steps). Owner: whoever finishes first.
 2. Only change your own `plugins/<name>/plugin.py` "don't even think of commenting a single line of another plugin".
 3. Talk to other plugins only through `ctx.store` "your walki talkie".
 4. Test your plugin alone: `uv run pytest -q`.
-5. Run the full demo: `uv run achtung`.
+5. Run the full demo: `uv run achtung` (TUI) or `uv run achtung --cli`.
 
 ## Files map
 
 - `src/achtung/core/` = rules (frozen = immutable).
 - `src/achtung/plugins/*/` = your work (one folder per person).
+- `src/achtung/tui.py` = the screen (Textual). `main.py` = entry point + plain `--cli` demo.
 - `src/achtung/data/` = fake KFS posts, roads, word map.
-- `tools/evaluate.py` = report numbers (stub till we finish all Ps).
+- `tools/evaluate.py` = report numbers (still a stub , yahia is working on it).
 - `tests/` = checks that everything fits together.
