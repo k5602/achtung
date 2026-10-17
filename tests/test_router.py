@@ -1,6 +1,6 @@
 # cspell:disable
+"""Router behavior: Dijkstra vs A* algorithms, graph loading, and plugin execution."""
 
-"""Router behavior: Dijkstra vs A* algorithms, setup and plugin run execution."""
 from achtung.core.registry import get
 from achtung.main import build_ctx
 from achtung.plugins.router.algorithms import astar, dijkstra
@@ -27,9 +27,9 @@ def test_router_setup_and_execution():
     router = get("router")
     router.setup(ctx)
 
-    assert router.adj is not None
-    
-    # Test route execution with lat/lon
+    assert len(router.adj) > 0
+
     route_res = router.run(ctx)
     assert route_res is not None
-    assert route_res.algo == "dijkstra"
+    assert len(route_res.nodes) > 0
+    assert route_res.distance_km > 0.0
