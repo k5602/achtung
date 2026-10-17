@@ -1,6 +1,8 @@
 """P3 verifier: confirmed vs unverified split. Owner: P3."""
 from __future__ import annotations
 
+from dataclasses import replace
+
 from achtung.core.base import VerifierPlugin
 from achtung.core.context import PluginContext
 from achtung.core.models import DisasterReport
@@ -35,7 +37,7 @@ class Verifier(VerifierPlugin):
         unverified: list[DisasterReport] = []
         for report in reports:
             is_confirmed = self.score(report) >= THRESHOLD
-            report.verified = is_confirmed
+            report = replace(report, verified=is_confirmed)
             if is_confirmed:
                 confirmed.append(report)
             else:
