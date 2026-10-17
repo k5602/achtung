@@ -46,6 +46,7 @@ def test_stubs_raise():
         if p.name in IMPLEMENTED:
             p.run(ctx)  # must not raise once implemented
             continue
+
         try:
             p.run(ctx)
         except NotImplementedError:
