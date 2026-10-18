@@ -54,3 +54,32 @@ class RoutePath:
     distance_km: float
     algo: str  # dijkstra | astar
     expanded: int  # nodes expanded, for report comparison
+
+
+@dataclass(frozen=True)
+class EvaluateResult:
+    """Metrics for ONE query run (single timed sample) ."""
+
+    text: str
+    need: str
+    
+    # Time metric .
+    retrieval_ms: float           # one sample from the real run
+    verify_ms: float
+    match_ms: float
+    route_ms: float
+    total_ms: float
+
+    hits: int
+
+    # Ranking Metric .
+    baseline_top1: str            # resource id
+    weighted_top1: str
+    top1_agree: bool
+    swap: int                     # baseline top-1 position in weighted list
+
+    # Routing metric .
+    dijkstra_km: float
+    astar_km: float
+    dijkstra_expanded: int
+    astar_expanded: int
