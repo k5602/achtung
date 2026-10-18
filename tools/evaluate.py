@@ -118,14 +118,60 @@ class Evaluator:
         self.results.clear()
 
 
+def format_report(results: list[EvaluateResult], means: dict[str, float]) -> str:
+    """Three tables: timing , ranking swap, Dijkstra vs A*."""
+    lines: list[str] = []
+
+    lines.append("== Timing: one sample per query (ms) ==")
+    lines.append(
+        f"{'query':<28} {'need':<8} {'hits':>4} {'retrieval':>10} {'verify':>8} "
+        f"{'match':>8} {'route':>8} {'total':>8}"
+    )
+    for r in results:
+        lines.append(
+            f"{r.text:<28.28} {r.need:<8} {r.hits:>4} {r.retrieval_ms:>10.3f} "
+            f"{r.verify_ms:>8.3f} {r.match_ms:>8.3f} {r.route_ms:>8.3f} {r.total_ms:>8.3f}"
+        )
+    if results:
+        n = len(results)
+        lines.append(
+            f"{'RUNNING MEAN':<28.28} {'':<8} {'':>4} {means['retrieval_ms']:>10.3f} "
+            f"{means['verify_ms']:>8.3f} {means['match_ms']:>8.3f} "
+            f"{means['route_ms']:>8.3f} {means['total_ms']:>8.3f}  (n={n})"
+        )
+
+    lines.append("")
+    lines.append("== Ranking: distance baseline vs weighted ==")
+    lines.append(
+        f"{'query':<28} {'need':<8} {'baseline top1':<22} {'weighted top1':<22} "
+        f"{'agree':>5} {'swap':>4}"
+    )
+    for r in results:
+        lines.append(
+            f"{r.text:<28.28} {r.need:<8} {r.baseline_top1:<22} {r.weighted_top1:<22} "
+            f"{r.top1_agree!s:>5} {r.swap:>4}"
+        )
+
+    lines.append("")
+    lines.append("== Routing: Dijkstra vs A* ==")
+    lines.append(
+        f"{'query':<28} {'need':<8} {'dijkstra km':>11} {'astar km':>9} "
+        f"{'d_exp':>5} {'a_exp':>5} {'saved':>7}"
+    )
+    for r in results:
+        saved = 100.0 * (1.0 - r.astar_expanded / r.dijkstra_expanded) if r.dijkstra_expanded else 0.0
+        lines.append(
+            f"{r.text:<28.28} {r.need:<8} {r.dijkstra_km:>11.3f} {r.astar_km:>9.3f} "
+            f"{r.dijkstra_expanded:>5} {r.astar_expanded:>5} {saved:>6.1f}%"
+        )
+    return "\n".join(lines)
 
 
 def main() -> None:
-    """Print precision@k, ranking swap, Dijkstra vs A* table."""
-    # TODO(owner): time retrieval.search, print ms.
-    # TODO(owner): compare matcher.baseline vs matcher.rank top-1.
-    # TODO(owner): compare router dijkstra vs astar (km + expanded).
-    raise NotImplementedError
+    """Evaluate the static project queries and print the report."""
+    evaluator = Evaluator()
+    results = [evaluator.evaluate(text, need) for text, need in QUERIES]
+    print(format_report(results, evaluator.means()))
 
 
 if __name__ == "__main__":
