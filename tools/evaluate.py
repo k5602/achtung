@@ -87,6 +87,37 @@ def evaluate_query(text: str, need: str = "all") -> EvaluateResult:
     )
 
 
+class Evaluator:
+    """Runs queries, keeps every result, exposes running means (TUI-injectable)."""
+
+    def __init__(self) -> None:
+        self.results: list[EvaluateResult] = []
+
+    @property
+    def count(self) -> int:
+        """Number of queries evaluated so far (n of the running mean)."""
+        return len(self.results)
+
+    def evaluate(self, text: str, need: str = "all") -> EvaluateResult:
+        """One query = one sample; appended to the running history."""
+        result = evaluate_query(text, need)
+        self.results.append(result)
+        return result
+
+    def mean(self, field: str) -> float:
+        """Running mean sum/n for a timing field (n = queries so far)."""
+        if not self.results:
+            return 0.0
+        return sum(getattr(r, field) for r in self.results) / len(self.results)
+
+    def means(self) -> dict[str, float]:
+        """Running means for all timing fields: n=1 -> t1, n=2 -> (t1+t2)/2."""
+        return {f: self.mean(f) for f in MEAN_FIELDS}
+
+    def reset(self) -> None:
+        self.results.clear()
+
+
 
 
 def main() -> None:
