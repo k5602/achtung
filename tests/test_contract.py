@@ -5,6 +5,7 @@ import achtung.plugins  # noqa: F401
 from achtung.core.base import (
     BasePlugin,
     CollectorPlugin,
+    EvaluatorPlugin,
     MatcherPlugin,
     RetrievalPlugin,
     RouterPlugin,
@@ -13,14 +14,15 @@ from achtung.core.base import (
 from achtung.core.registry import PLUGINS
 from achtung.main import build_ctx
 
-EXPECTED = {"collector", "retrieval", "verifier", "matcher", "router"}
-IMPLEMENTED = {"collector", "retrieval", "verifier", "matcher", "router"}  # plugins with real run(), add names here as they land
+EXPECTED = {"collector", "retrieval", "verifier", "matcher", "router", "evaluator"}
+IMPLEMENTED = {"collector", "retrieval", "verifier", "matcher", "router", "evaluator"}  # plugins with real run(), add names here as they land
 BASES = {
     "collector": CollectorPlugin,
     "retrieval": RetrievalPlugin,
     "verifier": VerifierPlugin,
     "matcher": MatcherPlugin,
     "router": RouterPlugin,
+    "evaluator": EvaluatorPlugin,
 }
 
 
