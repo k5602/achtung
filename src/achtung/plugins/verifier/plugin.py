@@ -42,8 +42,9 @@ class Verifier(VerifierPlugin):
                 confirmed.append(report)
             else:
                 unverified.append(report)
-        ctx.log(
-            f"Verifier: {len(confirmed)} confirmed, "
-            f"{len(unverified)} unverified"
-        )
+        if ctx.config.get("debug"):
+            ctx.log(
+                f"Verifier: {len(confirmed)} confirmed, "
+                f"{len(unverified)} unverified"
+            )
         return confirmed, unverified

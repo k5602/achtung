@@ -58,17 +58,20 @@ class RoutePath:
 
 @dataclass(frozen=True)
 class EvaluateResult:
-    """Metrics for ONE query run (single timed sample) ."""
+    """Mean metrics for ONE query over N runsand and min/max."""
 
     text: str
     need: str
+    runs: int                     # timed runs folded into the fields
     
     # Time metric .
-    retrieval_ms: float           # one sample from the real run
+    retrieval_ms: float           # mean of the runs
     verify_ms: float
     match_ms: float
-    route_ms: float
-    total_ms: float
+    route_ms: float | None        # None = no aid point, stage skipped
+    total_ms: float               # mean
+    total_min_ms: float           # best case (noise floor)
+    total_max_ms: float           # worst case (spike)
 
     hits: int
 
@@ -79,7 +82,7 @@ class EvaluateResult:
     swap: int                     # baseline top-1 position in weighted list
 
     # Routing metric .
-    dijkstra_km: float
-    astar_km: float
-    dijkstra_expanded: int
-    astar_expanded: int
+    dijkstra_km: float | None     # None = no route benchmarked
+    astar_km: float | None
+    dijkstra_expanded: int | None
+    astar_expanded: int | None
