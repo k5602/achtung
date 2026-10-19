@@ -14,12 +14,18 @@ from achtung.core.store import InMemoryStore
 KFS_LAT, KFS_LON = 31.0968, 30.9516
 
 
-def build_ctx(need: str = "all", text: str = "اكل في كفر الشيخ") -> PluginContext:
+def build_ctx(
+    need: str = "all", text: str = "اكل في كفر الشيخ", debug: bool = False
+) -> PluginContext:
     """Fresh store + default KFS query. setup_all tolerates stubs."""
     store = InMemoryStore()
     ctx = PluginContext(
         store=store,
-        config={"offline": True, "query": UserQuery(text=text, lat=KFS_LAT, lon=KFS_LON, need=need)},
+        config={
+            "offline": True,
+            "debug": debug,
+            "query": UserQuery(text=text, lat=KFS_LAT, lon=KFS_LON, need=need),
+        },
     )
     for name in ("collector", "retrieval", "verifier", "matcher", "router"):
         try:
@@ -29,20 +35,21 @@ def build_ctx(need: str = "all", text: str = "اكل في كفر الشيخ") ->
     return ctx
 
 # TODO add a --offline flag to avoid network calls (for demo purposes, we can use a local store with canned data).
-# TODO add a --debug flag to show more verbose logs (for demo purposes, we can use a local store with canned data).
 def main() -> None:
     """Open the TUI on a terminal; --cli (or a pipe) prints the plain demo."""
     ap = argparse.ArgumentParser(description="Achtung SafeReach demo (KFS)")
     ap.add_argument("--need", default="all", help="food|shelter|medical|water|all")
     ap.add_argument("--text", default="اكل في كفر الشيخ", help="query text")
     ap.add_argument("--cli", action="store_true", help="plain output instead of the TUI")
+    ap.add_argument("--debug", action="store_true", help="verbose plugin logs")
     args = ap.parse_args()
     if not args.cli and sys.stdout.isatty():
         from achtung.tui import AchtungApp
 
-        AchtungApp(build_ctx(args.need, args.text)).run()
+        ctx = build_ctx(args.need, args.text, debug=args.debug) # debug flags for verifier details .
+        AchtungApp(ctx, evaluator=get("evaluator")).run()
         return
-    ctx = build_ctx(args.need, args.text)
+    ctx = build_ctx(args.need, args.text, debug=args.debug)
     q: UserQuery = ctx.config["query"]
     print(f'Query: "{q.text}"  (user: KFS University, {KFS_LAT}, {KFS_LON})\n')
     for name in ("collector", "retrieval", "verifier", "matcher", "router"):
