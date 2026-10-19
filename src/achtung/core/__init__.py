@@ -2,6 +2,7 @@
 from achtung.core.base import (
     BasePlugin,
     CollectorPlugin,
+    EvaluatorPlugin,
     MatcherPlugin,
     RetrievalPlugin,
     RouterPlugin,
@@ -9,13 +10,22 @@ from achtung.core.base import (
 )
 from achtung.core.context import PluginContext
 from achtung.core.geo import haversine_km
-from achtung.core.models import DisasterReport, RankedResult, Resource, RoutePath, UserQuery
+from achtung.core.models import (
+    DisasterReport,
+    EvaluateResult,
+    RankedResult,
+    Resource,
+    RoutePath,
+    UserQuery,
+)
 from achtung.core.store import InMemoryStore
 
 __all__ = [
     "BasePlugin",
     "CollectorPlugin",
     "DisasterReport",
+    "EvaluateResult",
+    "EvaluatorPlugin",
     "InMemoryStore",
     "MatcherPlugin",
     "PluginContext",

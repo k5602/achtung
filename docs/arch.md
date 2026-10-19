@@ -27,7 +27,7 @@ There are two layers: `core` and `plugins`, with `tui.py` on top.
 - `ctx.store.reports` (collected disaster posts, like news items).
 - `ctx.store.resources` (aid points list, like food and shelters).
 - `UserQuery` (user text + location + need, like "food near me").
-- `registry` (the list of all 5 plugins, runs them one by one).
+- `registry` (the list of all 6 plugins, the pipeline ones run one by one).
 
 ## How it works (step by step)
 
@@ -96,7 +96,7 @@ Method: Dijkstra (simple) vs A* (faster, uses distance guess).
 Learn: Dijkstra (https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm),
 A* (https://en.wikipedia.org/wiki/A*_search_algorithm).
 
-## Evaluator (`tools/evaluate.py`, stub only)
+## Evaluator (`plugins/evaluator/`)
 
 Job: make numbers for the report.
 Compares: search speed, mixed rank vs distance-only rank,
@@ -116,5 +116,5 @@ Dijkstra vs A* (km + steps). Owner: whoever finishes first.
 - `src/achtung/plugins/*/` = your work (one folder per person).
 - `src/achtung/tui.py` = the screen (Textual). `main.py` = entry point + plain `--cli` demo.
 - `src/achtung/data/` = fake KFS posts, roads, word map.
-- `tools/evaluate.py` = report numbers (still a stub , yahia is working on it).
+- `src/achtung/plugins/evaluator/` = live query metrics in the TUI status line (per-query ms, baseline vs weighted, Dijkstra vs A*).
 - `tests/` = checks that everything fits together.

@@ -4,7 +4,14 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 
 from achtung.core.context import PluginContext
-from achtung.core.models import DisasterReport, RankedResult, Resource, RoutePath, UserQuery
+from achtung.core.models import (
+    DisasterReport,
+    EvaluateResult,
+    RankedResult,
+    Resource,
+    RoutePath,
+    UserQuery,
+)
 
 
 class BasePlugin(ABC):
@@ -58,3 +65,9 @@ class RouterPlugin(BasePlugin):
         self, ctx: PluginContext, start: tuple[float, float], end: tuple[float, float], algo: str = "astar"
     ) -> RoutePath:
         """Shortest safe path. algo in {dijkstra, astar}."""
+
+
+class EvaluatorPlugin(BasePlugin):
+    @abstractmethod
+    def evaluate(self, ctx: PluginContext, query: UserQuery) -> EvaluateResult:
+        """Evaluate Pipline returns per-query metrics."""
