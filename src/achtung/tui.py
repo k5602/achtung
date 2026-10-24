@@ -14,7 +14,7 @@ from textual.containers import Horizontal, VerticalScroll
 from textual.widgets import Footer, Header, Select, Static
 
 from achtung.core.context import PluginContext
-from achtung.core.models import DisasterReport, RankedResult, RoutePath
+from achtung.core.models import DisasterReport, RankedResult, RoutePath, UserQuery
 from achtung.core.registry import get
 from achtung.main import KFS_LAT, KFS_LON, NEEDS, build_ctx
 
@@ -50,7 +50,7 @@ class PipelineResult:
 
 def run_pipeline(ctx: PluginContext) -> PipelineResult:
     """Run the 5 plugins in order: collect, search, verify, rank, route."""
-    query = ctx.config["query"]
+    query: UserQuery = ctx.config["query"]
     result = PipelineResult(need=query.need)
     get("collector").run(ctx)
     result.collected = len(ctx.store.reports)
