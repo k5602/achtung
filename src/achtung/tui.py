@@ -9,7 +9,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 from textual.app import App, ComposeResult
-from textual.binding import Binding
+from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, VerticalScroll
 from textual.widgets import Footer, Header, Select, Static
 
@@ -70,7 +70,7 @@ class AchtungApp(App):
     """Four panels over the pipeline; the need selector reruns it."""
 
     TITLE = "Achtung - SafeReach"
-    BINDINGS: ClassVar[list[Binding]] = [Binding("q", "quit", "quit")]
+    BINDINGS: ClassVar[list[BindingType]] = [Binding("q", "quit", "quit")]
 
     CSS = """
     #status { height: 1; padding: 0 1; }

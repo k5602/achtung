@@ -3,9 +3,9 @@
 
 import pytest
 
-from achtung.core.registry import get
 from achtung.main import build_ctx
 from achtung.plugins.router.algorithms import astar, dijkstra, heuristic_scale
+from achtung.plugins.router.plugin import Router
 
 
 def test_dijkstra_and_astar_correctness():
@@ -32,7 +32,7 @@ def test_dijkstra_and_astar_correctness():
 
 def test_astar_matches_dijkstra_on_every_pair():
     ctx = build_ctx()
-    router = get("router")
+    router = Router()
 
     for start in router.adj:
         for end in router.adj:
@@ -43,7 +43,7 @@ def test_astar_matches_dijkstra_on_every_pair():
 
 def test_route_validation_and_snapping():
     ctx = build_ctx()
-    router = get("router")
+    router = Router()
 
     snapped = router.route(ctx, (31.0968, 30.9516), (31.104, 30.9516))
     assert snapped.nodes[0] == "user"
@@ -58,11 +58,10 @@ def test_route_validation_and_snapping():
 
 def test_router_graph_load_and_execution():
     ctx = build_ctx()
-    router = get("router")
+    router = Router()
 
     assert len(router.adj) > 0
 
     route_res = router.run(ctx)
-    assert route_res is not None
     assert len(route_res.nodes) > 0
     assert route_res.distance_km > 0.0
