@@ -11,12 +11,7 @@ from .graph_loader import load_graph
 class Router(RouterPlugin):
     name = "router"
 
-    def __init__(self):
-        self.adj = {}
-        self.coords = {}
-
-    def setup(self, ctx: PluginContext) -> None:
-        """Load graph data onto instance attributes."""
+    def __init__(self) -> None:
         self.adj, self.coords = load_graph()
 
     def _nearest_node(self, target) -> str:

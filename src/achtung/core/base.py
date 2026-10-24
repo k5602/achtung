@@ -12,10 +12,6 @@ class BasePlugin(ABC):
     version: str = "0.1.0"
 
     @abstractmethod
-    def setup(self, ctx: PluginContext) -> None:
-        """Load files / build indexes. Must work offline."""
-
-    @abstractmethod
     def run(self, ctx: PluginContext) -> object:
         """Default entry for registry.run_all. Delegate to typed method."""
 

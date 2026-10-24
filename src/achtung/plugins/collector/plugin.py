@@ -21,9 +21,6 @@ TIMEOUT = 5
 class Collector(CollectorPlugin):
     name = "collector"
 
-    def setup(self, ctx: PluginContext) -> None:
-        """Load nothing. Must work offline."""
-
     def run(self, ctx: PluginContext) -> list[DisasterReport]:
         """Registry entry. Delegate to collect."""
         return self.collect(ctx)

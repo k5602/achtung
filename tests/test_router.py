@@ -33,7 +33,6 @@ def test_dijkstra_and_astar_correctness():
 def test_astar_matches_dijkstra_on_every_pair():
     ctx = build_ctx()
     router = get("router")
-    router.setup(ctx)
 
     for start in router.adj:
         for end in router.adj:
@@ -45,7 +44,6 @@ def test_astar_matches_dijkstra_on_every_pair():
 def test_route_validation_and_snapping():
     ctx = build_ctx()
     router = get("router")
-    router.setup(ctx)
 
     snapped = router.route(ctx, (31.0968, 30.9516), (31.104, 30.9516))
     assert snapped.nodes[0] == "user"
@@ -58,10 +56,9 @@ def test_route_validation_and_snapping():
         router.route(ctx, "user", "nosuch")
 
 
-def test_router_setup_and_execution():
+def test_router_graph_load_and_execution():
     ctx = build_ctx()
     router = get("router")
-    router.setup(ctx)
 
     assert len(router.adj) > 0
 

@@ -34,7 +34,6 @@ def test_interface_shape():
         assert isinstance(p, BasePlugin)
         assert isinstance(p, BASES[p.name])
         assert p.health() is True
-        assert callable(p.setup)
         assert callable(p.run)
         sig = inspect.signature(p.run)
         assert len(sig.parameters) == 1  # run(ctx) only

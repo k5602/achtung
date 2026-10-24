@@ -26,12 +26,12 @@ There are two layers: `core` and `plugins`, with `tui.py` on top.
   It holds two lists: reports and resources.
 - `ctx.store.reports` (collected disaster posts, like news items).
 - `ctx.store.resources` (aid points list, like food and shelters).
-- `UserQuery` (user text + location + need, like "food near me").
+- `UserQuery` (user location + need).
 - `registry` (the list of all 5 plugins, runs them one by one).
 
 ## How it works (step by step)
 
-1. User types a question, like "اكل في كفر الشيخ" "easy as a prototype".
+1. User picks a need (food | water | shelter | medical | all).
 2. Collector (P1) loads posts into `ctx.store.reports`.
 3. Retrieval (P2) picks the posts that match the question.
 4. Verifier (P3) splits posts into confirmed and unverified.
@@ -59,13 +59,10 @@ Python `requests` pkg timeout.
 
 ### P2 retrieval (`plugins/retrieval/`)
 
-Job: find posts that match the question.
+Job: rank posts for the selected need.
 In: `UserQuery` + `ctx.store.reports`. Out: sorted post list.
-Method: word count + TF-IDF. Goal: BM25 later.
-Uses `data/synonyms_ar_en.json` (Arabic word map).
-
-Learn: TF-IDF (https://en.wikipedia.org/wiki/Tf%E2%80%93idf),
-BM25 (https://en.wikipedia.org/wiki/Okapi_BM25).
+Method: reports whose kind matches the need come first,
+trust orders within; nothing is dropped.
 
 ### P3 verifier (`plugins/verifier/`)
 

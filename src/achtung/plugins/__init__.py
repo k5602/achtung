@@ -1,5 +1,5 @@
 """Plugin registry wiring. Import here to register."""
-from achtung.core.registry import PLUGINS, get, register, run_all, setup_all
+from achtung.core.registry import PLUGINS, get, register, run_all
 from achtung.plugins.collector import Collector
 from achtung.plugins.matcher import Matcher
 from achtung.plugins.retrieval import Retrieval
@@ -22,5 +22,4 @@ __all__ = [
            "get",
            "register",
            "run_all",
-           "setup_all",
 ]

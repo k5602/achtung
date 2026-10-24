@@ -15,10 +15,6 @@ class Matcher(MatcherPlugin):
     W_CAP = 0.2
     W_FRESH = 0.1
 
-    def setup(self, ctx: PluginContext) -> None:
-        """Stateless."""
-        return
-
     def run(self, ctx: PluginContext) -> list[RankedResult]:
         """Rank store resources for query in config."""
         query: UserQuery = ctx.config["query"]

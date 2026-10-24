@@ -34,10 +34,9 @@ class Resource:
 
 @dataclass(frozen=True)
 class UserQuery:
-    text: str
+    need: str  # food | shelter | medical | water | all
     lat: float
     lon: float
-    need: str  # food | shelter | medical | water | all
 
 
 @dataclass(frozen=True)

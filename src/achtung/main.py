@@ -13,38 +13,35 @@ from achtung.core.store import InMemoryStore
 # KFS University anchor (0.8 / 1.2 / 1.5 km).
 KFS_LAT, KFS_LON = 31.0968, 30.9516
 
+NEEDS = ("food", "water", "shelter", "medical", "all")
 
-def build_ctx(need: str = "all", text: str = "اكل في كفر الشيخ") -> PluginContext:
-    """Fresh store + default KFS query. setup_all tolerates stubs."""
+
+def build_ctx(need: str = "all") -> PluginContext:
+    """Fresh store + KFS query for the need."""
+    if need not in NEEDS:
+        raise ValueError(f"unknown need {need!r}; expected one of {NEEDS}")
     store = InMemoryStore()
-    ctx = PluginContext(
+    return PluginContext(
         store=store,
-        config={"offline": True, "query": UserQuery(text=text, lat=KFS_LAT, lon=KFS_LON, need=need)},
+        config={"offline": True, "query": UserQuery(need=need, lat=KFS_LAT, lon=KFS_LON)},
     )
-    for name in ("collector", "retrieval", "verifier", "matcher", "router"):
-        try:
-            get(name).setup(ctx)
-        except NotImplementedError:
-            ctx.log(f"[{name}] TODO: setup not implemented")
-    return ctx
 
 # TODO add a --offline flag to avoid network calls (for demo purposes, we can use a local store with canned data).
 # TODO add a --debug flag to show more verbose logs (for demo purposes, we can use a local store with canned data).
 def main() -> None:
     """Open the TUI on a terminal; --cli (or a pipe) prints the plain demo."""
     ap = argparse.ArgumentParser(description="Achtung SafeReach demo (KFS)")
-    ap.add_argument("--need", default="all", help="food|shelter|medical|water|all")
-    ap.add_argument("--text", default="اكل في كفر الشيخ", help="query text")
+    ap.add_argument("--need", default="all", choices=NEEDS, help="aid category to look up")
     ap.add_argument("--cli", action="store_true", help="plain output instead of the TUI")
     args = ap.parse_args()
     if not args.cli and sys.stdout.isatty():
         from achtung.tui import AchtungApp
 
-        AchtungApp(build_ctx(args.need, args.text)).run()
+        AchtungApp(build_ctx(args.need)).run()
         return
-    ctx = build_ctx(args.need, args.text)
+    ctx = build_ctx(args.need)
     q: UserQuery = ctx.config["query"]
-    print(f'Query: "{q.text}"  (user: KFS University, {KFS_LAT}, {KFS_LON})\n')
+    print(f"Need: {q.need}  (user: KFS University, {KFS_LAT}, {KFS_LON})\n")
     for name in ("collector", "retrieval", "verifier", "matcher", "router"):
         try:
             get(name).run(ctx)

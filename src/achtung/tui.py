@@ -1,7 +1,7 @@
 """One-screen TUI: trusted news, warnings, nearest aid, road."""
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import ClassVar
 
 from rich.markup import escape
@@ -11,22 +11,30 @@ from rich.text import Text
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Horizontal, VerticalScroll
-from textual.widgets import Footer, Header, Input, Static
+from textual.widgets import Footer, Header, Select, Static
 
 from achtung.core.context import PluginContext
 from achtung.core.models import DisasterReport, RankedResult, RoutePath
 from achtung.core.registry import get
-from achtung.main import KFS_LAT, KFS_LON, build_ctx
+from achtung.main import KFS_LAT, KFS_LON, NEEDS, build_ctx
 
 MAX_REPORTS = 6
 MAX_AID = 8
+
+NEED_LABELS = {
+    "food": "Food اكل",
+    "water": "Water مياه",
+    "shelter": "Shelter ملجأ",
+    "medical": "Medical دواء",
+    "all": "All الكل",
+}
 
 
 @dataclass
 class PipelineResult:
     """What the screen shows: counts plus the data behind each panel."""
 
-    text: str
+    need: str
     collected: int = 0
     hits: list[DisasterReport] = field(default_factory=list)
     confirmed: list[DisasterReport] = field(default_factory=list)
@@ -43,8 +51,7 @@ class PipelineResult:
 def run_pipeline(ctx: PluginContext) -> PipelineResult:
     """Run the 5 plugins in order: collect, search, verify, rank, route."""
     query = ctx.config["query"]
-    result = PipelineResult(text=query.text)
-
+    result = PipelineResult(need=query.need)
     get("collector").run(ctx)
     result.collected = len(ctx.store.reports)
     result.hits = get("retrieval").search(ctx, query)
@@ -60,7 +67,7 @@ def run_pipeline(ctx: PluginContext) -> PipelineResult:
 
 
 class AchtungApp(App):
-    """KFS query box on top, four panels below, Enter reruns the pipeline."""
+    """Four panels over the pipeline; the need selector reruns it."""
 
     TITLE = "Achtung - SafeReach"
     BINDINGS: ClassVar[list[Binding]] = [Binding("q", "quit", "quit")]
@@ -74,7 +81,6 @@ class AchtungApp(App):
     def __init__(self, ctx: PluginContext | None = None) -> None:
         super().__init__()
         self.ctx = ctx or build_ctx()
-        self.need = self.ctx.config["query"].need
         self.result = run_pipeline(self.ctx)
 
     def compose(self) -> ComposeResult:
@@ -87,24 +93,30 @@ class AchtungApp(App):
             with VerticalScroll(classes="col"):
                 yield Static(id="aid")
                 yield Static(id="road")
-        yield Input(placeholder="type a query, Enter to run", id="query")
+        yield Select(
+            [(NEED_LABELS[n], n) for n in NEEDS],
+            value=self.ctx.config["query"].need,
+            prompt="pick a need",
+            allow_blank=False,
+            id="query",
+        )
         yield Footer()
 
     def on_mount(self) -> None:
         self._render_screen()
-        self.query_one("#query", Input).focus()
+        self.query_one("#query", Select).focus()
 
-    def on_input_submitted(self, event: Input.Submitted) -> None:
-        text = event.value.strip()
-        if not text:
+    def on_select_changed(self, event: Select.Changed) -> None:
+        need = str(event.value)
+        if need not in NEEDS:
             return
-        self.ctx = build_ctx(self.need, text)
+        self.ctx.config["query"] = replace(self.ctx.config["query"], need=need)
         self.result = run_pipeline(self.ctx)
         self._render_screen()
 
     def _render_screen(self) -> None:
         r = self.result
-        self.sub_title = f'KFS University | "{r.text}"'
+        self.sub_title = f"KFS University | need: {NEED_LABELS.get(r.need, r.need)}"
         self.query_one("#status", Static).update(self._status_line(r))
         self.query_one("#confirmed", Static).update(
             self._reports_table("Trusted news", r.confirmed, "green")

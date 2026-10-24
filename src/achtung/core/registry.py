@@ -22,12 +22,6 @@ def get(name: str) -> BasePlugin:
     raise KeyError(f"plugin not found: {name}")
 
 
-def setup_all(ctx: PluginContext) -> None:
-    """Call setup on every registered plugin."""
-    for p in PLUGINS:
-        p.setup(ctx)
-
-
 def run_all(ctx: PluginContext) -> dict[str, object]:
     """Run all plugins, collect results by name."""
     return {p.name: p.run(ctx) for p in PLUGINS}
