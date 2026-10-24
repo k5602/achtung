@@ -26,4 +26,5 @@ jobs:
       - run: uv sync --frozen --group dev
       - run: uv run ruff check src tests tools
       - run: uv run pytest -q
+      - run: uv check
       - run: uv run achtung --cli --need all
