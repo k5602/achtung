@@ -10,10 +10,10 @@ from achtung.plugins.router.plugin import Router
 
 def test_dijkstra_and_astar_correctness():
     sample_graph = {
-        "A": {"B": 1, "C": 4},
-        "B": {"A": 1, "C": 2, "D": 5},
-        "C": {"A": 4, "B": 2, "D": 1},
-        "D": {"B": 5, "C": 1},
+        "A": {"B": 1.0, "C": 4.0},
+        "B": {"A": 1.0, "C": 2.0, "D": 5.0},
+        "C": {"A": 4.0, "B": 2.0, "D": 1.0},
+        "D": {"B": 5.0, "C": 1.0},
     }
     coords = {
         "A": (31.0968, 30.9516),
