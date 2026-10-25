@@ -1,7 +1,16 @@
 """Manual plugin registry. No auto-discovery (explicit = fewer conflicts)."""
 from __future__ import annotations
 
-from achtung.core.base import BasePlugin
+from typing import Literal, overload
+
+from achtung.core.base import (
+    BasePlugin,
+    CollectorPlugin,
+    MatcherPlugin,
+    RetrievalPlugin,
+    RouterPlugin,
+    VerifierPlugin,
+)
 from achtung.core.context import PluginContext
 
 PLUGINS: list[BasePlugin] = []
@@ -12,6 +21,26 @@ def register(plugin: BasePlugin) -> BasePlugin:
     if plugin not in PLUGINS:
         PLUGINS.append(plugin)
     return plugin
+
+
+@overload
+def get(name: Literal["collector"]) -> CollectorPlugin: ...
+
+
+@overload
+def get(name: Literal["retrieval"]) -> RetrievalPlugin: ...
+
+
+@overload
+def get(name: Literal["verifier"]) -> VerifierPlugin: ...
+
+
+@overload
+def get(name: Literal["matcher"]) -> MatcherPlugin: ...
+
+
+@overload
+def get(name: Literal["router"]) -> RouterPlugin: ...
 
 
 def get(name: str) -> BasePlugin:

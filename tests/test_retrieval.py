@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from achtung.core.context import PluginContext
-from achtung.core.models import DisasterReport, UserQuery
+from achtung.core.models import DisasterReport, Need, UserQuery
 from achtung.core.store import InMemoryStore
 from achtung.main import NEEDS
 from achtung.plugins.retrieval.plugin import Retrieval
@@ -20,7 +20,7 @@ def make_ctx() -> tuple[PluginContext, Retrieval]:
     return ctx, Retrieval()
 
 
-def q(need: str = "all") -> UserQuery:
+def q(need: Need = "all") -> UserQuery:
     return UserQuery(need=need, lat=KFS[0], lon=KFS[1])
 
 

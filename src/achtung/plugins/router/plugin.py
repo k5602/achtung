@@ -2,7 +2,7 @@
 from achtung.core.base import RouterPlugin
 from achtung.core.context import PluginContext
 from achtung.core.geo import haversine_km
-from achtung.core.models import RoutePath
+from achtung.core.models import RoutePath, UserQuery
 
 from .algorithms import astar, dijkstra
 from .graph_loader import load_graph
@@ -14,21 +14,18 @@ class Router(RouterPlugin):
     def __init__(self) -> None:
         self.adj, self.coords = load_graph()
 
-    def _nearest_node(self, target) -> str:
+    def _nearest_node(self, target: str | tuple[float, float]) -> str:
         if isinstance(target, str):
             return target
-        if isinstance(target, (tuple, list)) and len(target) >= 2:
-            lat, lon = float(target[0]), float(target[1])
-            if not self.coords:
-                nodes = list(self.adj.keys())
-                return nodes[0] if nodes else ""
-            return min(
-                self.coords.keys(),
-                key=lambda n: haversine_km(
-                    lat, lon, self.coords[n][0], self.coords[n][1]
-                ),
-            )
-        return str(target)
+
+        lat, lon = target
+        if not self.coords:
+            nodes = list(self.adj.keys())
+            return nodes[0] if nodes else ""
+        return min(
+            self.coords.keys(),
+            key=lambda n: haversine_km(lat, lon, self.coords[n][0], self.coords[n][1]),
+        )
 
     def route(
         self,
@@ -62,8 +59,8 @@ class Router(RouterPlugin):
 
     def run(self, ctx: PluginContext) -> RoutePath:
         """(TODO(P5): use the matcher's top result)."""
-        query = ctx.config.get("query")
-        if query and hasattr(query, "lat") and hasattr(query, "lon"):
+        query: UserQuery | None = ctx.config.get("query")
+        if query is not None:
             start_pos = (query.lat, query.lon)
         elif "user" in self.coords:
             start_pos = self.coords["user"]

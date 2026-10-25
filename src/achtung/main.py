@@ -6,14 +6,14 @@ import sys
 
 import achtung.plugins  # noqa: F401  (registers all)
 from achtung.core.context import PluginContext
-from achtung.core.models import UserQuery
+from achtung.core.models import Need, UserQuery
 from achtung.core.registry import get
 from achtung.core.store import InMemoryStore
 
 # KFS University anchor (0.8 / 1.2 / 1.5 km).
 KFS_LAT, KFS_LON = 31.0968, 30.9516
 
-NEEDS = ("food", "water", "shelter", "medical", "all")
+NEEDS: tuple[Need, ...] = ("food", "water", "shelter", "medical", "all")
 
 
 def build_ctx(need: str = "all") -> PluginContext:

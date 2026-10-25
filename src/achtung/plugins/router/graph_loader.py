@@ -1,9 +1,13 @@
 """Load the mock road graph (nodes with lat/lon + km edges from kfs_graph.json)."""
 import json
 from pathlib import Path
+from typing import Any
+
+Adjacency = dict[str, dict[str, float]]
+NodeCoords = dict[str, tuple[float, float]]
 
 
-def load_graph() -> tuple[dict[str, dict[str, float]], dict[str, tuple[float, float]]]:
+def load_graph() -> tuple[Adjacency, NodeCoords]:
     """Return (adjacency, coordinates); empty dicts if the file is missing."""
     path = Path(__file__).resolve().parents[2] / "data" / "kfs_graph.json"
     if not path.exists():
@@ -14,12 +18,12 @@ def load_graph() -> tuple[dict[str, dict[str, float]], dict[str, tuple[float, fl
 
     nodes = data.get("nodes", {})
     if isinstance(nodes, list):
-        nodes_dict = {n: {} for n in nodes}
+        nodes_dict: dict[str, Any] = {n: {} for n in nodes}
     else:
         nodes_dict = nodes
 
-    adj = {n: {} for n in nodes_dict}
-    coords = {}
+    adj: Adjacency = {n: {} for n in nodes_dict}
+    coords: NodeCoords = {}
 
     for n, info in nodes_dict.items():
         if isinstance(info, dict) and "lat" in info and "lon" in info:

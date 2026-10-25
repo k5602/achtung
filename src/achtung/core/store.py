@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from typing import Any
 
 from achtung.core.models import DisasterReport, Resource
 
@@ -32,7 +33,7 @@ class InMemoryStore:
         for r in raw.get("resources", []):
             self.resources.append(self._to_resource(r))
 
-    def _to_report(self, r: dict) -> DisasterReport:
+    def _to_report(self, r: dict[str, Any]) -> DisasterReport:
         """Convert hours_ago to absolute time."""
         return DisasterReport(
             id=r["id"],
@@ -47,7 +48,7 @@ class InMemoryStore:
             verified=bool(r.get("verified", False)),
         )
 
-    def _to_resource(self, r: dict) -> Resource:
+    def _to_resource(self, r: dict[str, Any]) -> Resource:
         """Plain mapping, no time math."""
         return Resource(
             id=r["id"],

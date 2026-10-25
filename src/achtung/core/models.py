@@ -3,6 +3,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Literal
+
+Need = Literal["food", "water", "shelter", "medical", "all"]
 
 
 @dataclass(frozen=True)
@@ -34,7 +37,7 @@ class Resource:
 
 @dataclass(frozen=True)
 class UserQuery:
-    need: str  # food | shelter | medical | water | all
+    need: Need
     lat: float
     lon: float
 
